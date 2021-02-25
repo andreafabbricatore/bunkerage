@@ -93,14 +93,13 @@ class mainApp():
         self.error_login = tk.Label(screen_frame_login, text="", bg="white", fg="red")
         self.error_login.place(relx=0.3, rely=0.61)
         
-
     def show_decrypt(self):
-        self.chosen_decrypt_file = ""
-        self.chosen_decrypt_dest = ""
-        self.decrypt_key = ""
-        self.decrypt_nonce = ""
-        self.decrypt_tag = ""
-        self.root.geometry('500x250')
+        self.chosen_decrypt_file_anon = ""
+        self.chosen_decrypt_dest_anon = ""
+        self.decrypt_key_anon = ""
+        self.decrypt_nonce_anon = ""
+        self.decrypt_tag_anon = ""
+        self.root.geometry('500x275')
 
         decrypt_frame = tk.Frame(self.root, bg="#efeff5", highlightbackground="black", highlightthickness=1)
         decrypt_frame.place(relwidth=1, relheight=1)
@@ -115,33 +114,33 @@ class mainApp():
         decrypttag.config(font=("Calibri", 20, "bold"))
         decrypttag.place(rely=0.05, relx=0.05)
 
-        self.selectfiletagdecrypt = tk.Label(decrypt_frame, text="File to Decrypt", bg="#efeff5", fg="black")
-        self.selectfiletagdecrypt.place(rely=0.18, relx=0.05)
+        self.selectfiletagdecryptanon = tk.Label(decrypt_frame, text="File to Decrypt", bg="#efeff5", fg="black")
+        self.selectfiletagdecryptanon.place(rely=0.18, relx=0.05)
 
-        self.selectfilebuttondecrypt = tk.Button(decrypt_frame, text="Import", bg="#efeff5", fg="black", relief='flat', borderwidth=0, pady=3, padx=10, command=self.importdecryptfile)
-        self.selectfilebuttondecrypt.place(rely=0.3, relx=0.057)
+        self.selectfilebuttondecryptanon = tk.Button(decrypt_frame, text="Import", bg="#efeff5", fg="black", relief='flat', borderwidth=0, pady=3, padx=10, command=self.importdecryptfileanon)
+        self.selectfilebuttondecryptanon.place(rely=0.3, relx=0.057)
 
-        self.selectdesttagdecrypt = tk.Label(decrypt_frame, text="File Destination", bg="#efeff5", fg="black")
-        self.selectdesttagdecrypt.place(rely=0.46, relx=0.05)
+        self.selectdesttagdecryptanon = tk.Label(decrypt_frame, text="File Destination", bg="#efeff5", fg="black")
+        self.selectdesttagdecryptanon.place(rely=0.46, relx=0.05)
 
-        self.selectdestbuttondecrypt = tk.Button(decrypt_frame, text="Choose Destination", bg="#efeff5", fg="black", relief='flat', borderwidth=0, pady=3, padx=10, command=self.choosedecryptdest)
-        self.selectdestbuttondecrypt.place(rely=0.58, relx=0.057)
+        self.selectdestbuttondecryptanon = tk.Button(decrypt_frame, text="Choose Destination", bg="#efeff5", fg="black", relief='flat', borderwidth=0, pady=3, padx=10, command=self.choosedecryptdestanon)
+        self.selectdestbuttondecryptanon.place(rely=0.58, relx=0.057)
 
-        self.processlabeldecrypt = tk.Label(decrypt_frame, text="Decrypting...", bg="#efeff5", fg="black")
-        self.processlabeldecrypt.config(font=("Calibri", 20, "bold"))
+        self.processlabeldecryptanon = tk.Label(decrypt_frame, text="Decrypting...", bg="#efeff5", fg="black")
+        self.processlabeldecryptanon.config(font=("Calibri", 20, "bold"))
 
-        self.reset_button_decrypt = tk.Button(decrypt_frame, text="Reset", bg="#efeff5", fg="black", relief='flat', borderwidth=0, pady=3, padx=10, command=self.resetdecryptloggedapp)
+        self.reset_button_decrypt_anon = tk.Button(decrypt_frame, text="Reset", bg="#efeff5", fg="black", relief='flat', borderwidth=0, pady=3, padx=10, command=self.resetdecryptanonapp)
 
-        decryptbutton = tk.Button(decrypt_frame, text="Decrypt", bg="#efeff5", fg="black", relief='flat', borderwidth=0, pady=3, padx=10, command=self.dodecrypt)
+        decryptbutton = tk.Button(decrypt_frame, text="Decrypt", bg="#efeff5", fg="black", relief='flat', borderwidth=0, pady=3, padx=10, command=self.dodecryptanon)
         decryptbutton.place(rely=0.8, relx=0.057, relwidth=0.886)
 
-        self.importkeystag = tk.Label(decrypt_frame, text="Import Keys", bg="#efeff5", fg="black")
-        self.importkeystag.place(rely=0.46, relx=0.595)
+        self.importkeystaganon = tk.Label(decrypt_frame, text="Import Keys", bg="#efeff5", fg="black")
+        self.importkeystaganon.place(rely=0.46, relx=0.595)
 
-        self.importkeysbutton = tk.Button(decrypt_frame, text="Import", bg="#efeff5", fg="black", relief='flat', borderwidth=0, pady=3, padx=10, command=self.getkeyswindow)
-        self.importkeysbutton.place(rely=0.58, relx=0.6)
+        self.importkeysbuttonanon = tk.Button(decrypt_frame, text="Import", bg="#efeff5", fg="black", relief='flat', borderwidth=0, pady=3, padx=10, command=self.getkeyswindowanon)
+        self.importkeysbuttonanon.place(rely=0.58, relx=0.6)
 
-        self.error_tag_decrypt = tk.Label(decrypt_frame, text="", bg="#efeff5", fg="red")
+        self.error_tag_decrypt_anon = tk.Label(decrypt_frame, text="", bg="#efeff5", fg="red")
 
     def show_logged_app(self, uid):
         self.chosen_file = ""
@@ -314,6 +313,58 @@ class mainApp():
             self.error_tag_decrypt.place(rely=0.05, relx=0.5)
         self.getkeyswindow.destroy()
 
+    def getkeyswindowanon(self):
+        self.getkeyswindowanon = tk.Toplevel(self.root)
+        self.getkeyswindowanon.resizable(False,False)
+        self.getkeyswindowanon.title("*Encryption Keys*")
+        self.getkeyswindowanon.geometry("700x220")
+
+        keys_frame = tk.Frame(self.getkeyswindowanon, bg='white')
+        keys_frame.place(relwidth=1, relheight=1)
+        if self.chosen_decrypt_file_anon != "":
+            file_label = tk.Label(keys_frame, text="File: %s" % (os.path.basename(self.chosen_decrypt_file_anon)), bg="white", fg="black")
+
+            key_val = tk.StringVar()
+            key_label = tk.Label(keys_frame, text="Key", bg="white", fg="black")
+            key_label.place(rely=0.15, relx=0.02)
+            self.key_entry_anon = tk.Entry(keys_frame, bg='white', relief='flat',fg='black', textvariable=key_val)
+            self.key_entry_anon.place(rely=0.25, relx=0.02, relwidth=0.96, relheight=0.1)
+
+            nonce_val = tk.StringVar()
+            nonce_label = tk.Label(keys_frame, text="Nonce", bg="white", fg="black")
+            nonce_label.place(rely=0.35, relx=0.02)
+            self.nonce_entry_anon = tk.Entry(keys_frame, bg='white', relief='flat',fg='black', textvariable=nonce_val)
+            self.nonce_entry_anon.place(rely=0.45, relx=0.02, relwidth=0.96, relheight=0.1)
+
+            tag_val = tk.StringVar()
+            tag_label = tk.Label(keys_frame, text="Tag", bg="white", fg="black")
+            tag_label.place(rely=0.55, relx=0.02)
+            self.tag_entry_anon = tk.Entry(keys_frame, bg='white', relief='flat',fg='black', textvariable=tag_val)
+            self.tag_entry_anon.place(rely=0.65, relx=0.02, relwidth=0.96, relheight=0.1)
+
+            submit_keys_button = tk.Button(keys_frame, text="Submit Keys", bg="#efeff5", fg="black", relief='flat', borderwidth=0, pady=3, padx=10, command=self.get_decrypt_keys_anon)
+            submit_keys_button.place(rely=0.8, relx=0.02, relwidth=0.96)
+
+        else:
+            file_label = tk.Label(keys_frame, text="Please Choose File First", bg="white", fg="black")
+        file_label.config(font=("Calibri", 13, "bold"))
+        file_label.place(rely=0.05, relx=0.02)
+
+    def get_decrypt_keys_anon(self):
+        self.decrypt_key_anon = self.key_entry_anon.get().strip().encode('latin-1').decode('unicode_escape').encode('latin-1')
+        self.decrypt_nonce_anon = self.nonce_entry_anon.get().strip().encode('latin-1').decode('unicode_escape').encode('latin-1')
+        self.decrypt_tag_anon = self.tag_entry_anon.get().strip().encode('latin-1').decode('unicode_escape').encode('latin-1')
+        print(self.decrypt_key_anon, self.decrypt_nonce_anon, self.decrypt_tag_anon)
+        print(type(self.decrypt_tag_anon), type(self.decrypt_nonce_anon), type(self.decrypt_tag_anon))
+        if self.decrypt_tag_anon != b'' and self.decrypt_nonce_anon != b'' and self.decrypt_key_anon != b'':
+            self.error_tag_decrypt_anon.place_forget()
+            self.importkeystaganon["text"] = "Imported"
+            self.importkeysbuttonanon["text"] = "Change Keys"
+        else:
+            self.error_tag_decrypt_anon["text"] = "Invalid Keys"
+            self.error_tag_decrypt_anon.place(rely=0.05, relx=0.5)
+        self.getkeyswindowanon.destroy()
+
     def resetencryptloggedapp(self):
         self.processlabel.place_forget()
         self.show_keys_button.place_forget()
@@ -341,6 +392,22 @@ class mainApp():
         self.decrypt_key = ""
         self.decrypt_tag = ""
         self.decrypt_nonce = ""
+
+    def resetdecryptanonapp(self):
+        self.processlabeldecryptanon.place_forget()
+        self.reset_button_decrypt_anon.place_forget()
+        self.selectdesttagdecryptanon["text"] = "File Destination"
+        self.selectfiletagdecryptanon["text"] = "File to Decrypt"
+        self.processlabeldecryptanon["text"] = "Encrypting..."
+        self.chosen_decrypt_file_anon = ""
+        self.chosen_decrypt_dest_anon = ""
+        self.selectdestbuttondecryptanon["text"] = "Choose Destination"
+        self.selectfilebuttondecryptanon["text"] = "Import"
+        self.importkeystaganon["text"] = "Import Keys"
+        self.importkeysbuttonanon["text"] = "Import"
+        self.decrypt_key_anon = ""
+        self.decrypt_tag_anon = ""
+        self.decrypt_nonce_anon = ""
 
     def loginconndb(self):
         self.trylogin(self.username_entry.get(), self.psw_entry.get())
@@ -374,6 +441,17 @@ class mainApp():
             self.error_tag_decrypt.place(rely=0.05, relx=0.5)
             self.chosen_decrypt_file = ""
 
+    def importdecryptfileanon(self):
+        self.chosen_decrypt_file_anon = tkinter.filedialog.askopenfilename(initialdir = self.dir, title = "Choose file to encrypt")
+        if self.chosen_decrypt_file_anon != "" and os.path.splitext(self.chosen_decrypt_file_anon)[1] == ".png":
+            self.selectfiletagdecryptanon["text"] = "File to Decrypt: %s" % (os.path.basename(self.chosen_decrypt_file_anon))
+            self.selectfilebuttondecryptanon["text"] = "Change File"
+            self.error_tag_decrypt_anon.place_forget()
+        else:
+            self.error_tag_decrypt_anon["text"] = "Invalid File"
+            self.error_tag_decrypt_anon.place(rely=0.05, relx=0.5)
+            self.chosen_decrypt_file_anon = ""
+
 
     def choosedest(self):
         self.chosen_dest = tkinter.filedialog.askdirectory(initialdir = self.dir, title = "Choose destination")
@@ -396,6 +474,17 @@ class mainApp():
             self.error_tag_decrypt["text"] = "Invalid Destination"
             self.error_tag_decrypt.place(rely=0.05, relx=0.5)
             self.chosen_decrypt_dest = ""
+
+    def choosedecryptdestanon(self):
+        self.chosen_decrypt_dest_anon = tkinter.filedialog.askdirectory(initialdir = self.dir, title = "Choose destination")
+        if self.chosen_decrypt_dest_anon != "":
+            self.selectdesttagdecryptanon["text"] = "File destination: /%s" % (os.path.basename(self.chosen_decrypt_dest_anon))
+            self.selectdestbuttondecryptanon["text"] = "Change Destination"
+            self.error_tag_decrypt_anon.place_forget()
+        else:
+            self.error_tag_decrypt_anon["text"] = "Invalid Destination"
+            self.error_tag_decrypt_anon.place(rely=0.05, relx=0.5)
+            self.chosen_decrypt_dest_anon = ""
 
     def doencrypt(self):
         #self.encryptbar.place(rely=0.3, relx=0.6)
@@ -441,6 +530,25 @@ class mainApp():
                 self.processlabeldecrypt.place_forget()
                 self.error_tag_decrypt["text"] = "Could not Decrypt"
                 self.error_tag_decrypt.place(rely=0.05, relx=0.5)
+
+    def dodecryptanon(self):
+        if self.chosen_decrypt_dest_anon == "" or self.chosen_decrypt_file_anon == "" or os.path.splitext(self.chosen_decrypt_file_anon)[1] != ".png":
+            self.error_tag_decrypt_anon["text"] = "Invalid File or destination"
+            self.error_tag_decrypt_anon.place(rely=0.05, relx=0.5)
+        elif self.decrypt_tag_anon == b'' or self.decrypt_key_anon == b'' or self.decrypt_nonce_anon == b'' or  self.decrypt_tag_anon == "" or self.decrypt_key_anon == "" or self.decrypt_nonce_anon == "":
+            self.error_tag_decrypt_anon["text"] = "Invalid Keys"
+            self.error_tag_decrypt_anon.place(rely=0.05, relx=0.5)
+        else:
+            try:
+                self.processlabeldecryptanon.place(rely=0.05, relx=0.5)
+                self.root.update_idletasks()
+                self.encryption_service.decode(self.chosen_decrypt_file_anon, self.chosen_decrypt_dest_anon, self.decrypt_key_anon, self.decrypt_nonce_anon, self.decrypt_tag_anon)
+                self.processlabeldecryptanon["text"] = "Complete"
+                self.reset_button_decrypt_anon.place(rely=0.3, relx=0.6)
+            except:
+                self.processlabeldecryptanon.place_forget()
+                self.error_tag_decrypt_anon["text"] = "Could not Decrypt"
+                self.error_tag_decrypt_anon.place(rely=0.05, relx=0.5)
 
     def update_bar(self, value):
         self.encryptbar["value"] = value
