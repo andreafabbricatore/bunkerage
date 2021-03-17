@@ -16,20 +16,8 @@ import requests
 class mainApp():
     def __init__(self):
         self.dir = os.getcwd()
-        try:
-            r = requests.get(url='https://api.npoint.io/d7afdb510babef57198f')
-            self.conn = psycopg2.connect(
-    dbname=r.json()['dbname'], 
-    user=r.json()['user'], 
-    password=r.json()['password'], 
-    host=r.json()['host']
-    )
-
-            self.cur = self.conn.cursor()
-            self.conn_status = True
-        except:
-            self.conn_status = False
-
+        
+        self.connect_to_db()
         self.root = tk.Tk()
         self.encryption_service = Encryption()
         
@@ -50,19 +38,30 @@ class mainApp():
 
         choose_label = tk.Label(log_decrypt_frame, text="Login or Decrypt anonymously", bg='#efeff5', fg="black")
         choose_label.config(font=("Calibri", 20))
-        choose_label.place(relx=0.5, rely=0.1, anchor='n')
 
         login_button = tk.Button(log_decrypt_frame, text="Login", relief='flat', command=self.show_login, borderwidth=0, pady=5, padx=20, width=10)
-        login_button.place(relx=0.3, rely=0.3, anchor='n')
 
         decrypt_anon_button = tk.Button(log_decrypt_frame, text="Decrypt", relief='flat', command=self.show_decrypt, borderwidth=0, pady=5, padx=20, width=10)
-        decrypt_anon_button.place(relx=0.7, rely=0.3, anchor='n')
+        
         status_tag = tk.Label(screen_frame, text="Online", bg="white", fg="green")
+
+        instructions_tag = tk.Label(log_decrypt_frame, text="Please connect to the internet to login - press below to reload", bg="#efeff5", fg="red")
+
+        self.reload_conn_button = tk.Button(log_decrypt_frame, text='Reload App', relief='flat', command=self.reload_app_conn, borderwidth=0, pady=5, padx=20, width=10)
+
         if self.conn_status:
+            choose_label.place(relx=0.5, rely=0.1, anchor='n')
+            login_button.place(relx=0.3, rely=0.3, anchor='n')
+            decrypt_anon_button.place(relx=0.7, rely=0.3, anchor='n')
             status_tag.place(relx=0.9, rely=0.92)
         else:
             status_tag.config(fg="red")
             status_tag.config(text="Offline")
+            choose_label.config(text="Offline - Decrypt anonymously")
+            choose_label.place(relx=0.5, rely=0.1, anchor='n')
+            decrypt_anon_button.place(relx=0.5, rely=0.3, anchor='n')
+            instructions_tag.place(relx=0.5, rely=0.5, anchor='n')
+            self.reload_conn_button.place(relx=0.5, rely=0.7, anchor='n')
             status_tag.place(relx=0.9, rely=0.92)
 
     def show_login(self, *args):
@@ -92,6 +91,14 @@ class mainApp():
 
         self.error_login = tk.Label(screen_frame_login, text="", bg="white", fg="red")
         self.error_login.place(relx=0.3, rely=0.61)
+
+        self.reload_conn_button_login = tk.Button(screen_frame_login, text='Check Connection', relief='flat', command=self.reload_app_conn_login, borderwidth=0, pady=5, padx=20, width=10)
+
+        if self.conn_status == False:
+            self.error_login['text'] = "Error with Connection"
+            self.error_login.place(relx=0.3, rely=0.61)
+            self.reload_conn_button_login.place(relx=0.6, rely=0.65, anchor='w')
+
         
     def show_decrypt(self):
         self.chosen_decrypt_file_anon = ""
@@ -413,11 +420,18 @@ class mainApp():
         self.trylogin(self.username_entry.get(), self.psw_entry.get())
 
     def trylogin(self, username, password):
-        self.cur.execute("SELECT uid, psw FROM users WHERE uid = '%s' AND psw = '%s'" % (username, password))
-        if self.cur.fetchone():
-            self.show_logged_app(username)
-        else:
-            self.error_login['text'] = "Invalid Login Details"
+        try:
+            self.connect_to_db()
+            if self.conn_status == False:
+                raise Exception()
+            self.cur.execute("SELECT uid, psw FROM users WHERE uid = '%s' AND psw = '%s'" % (username, password))
+            if self.cur.fetchone():
+                self.show_logged_app(username)
+            else:
+                self.error_login['text'] = "Invalid Login Details"
+        except:
+            self.error_login['text'] = "Error with Connection"
+            self.reload_conn_button_login.place(relx=0.6, rely=0.65, anchor='w')
 
     def importfile(self):
         self.chosen_file = tkinter.filedialog.askopenfilename(initialdir = self.dir, title = "Choose file to encrypt")
@@ -566,6 +580,29 @@ class mainApp():
 
     def exit_return_home(self, *args):
         self.returnhome.config(fg="black")
+
+    def connect_to_db(self):
+        try:
+            r = requests.get(url='https://api.npoint.io/d7afdb510babef57198f')
+            self.conn = psycopg2.connect(
+    dbname=r.json()['dbname'], 
+    user=r.json()['user'], 
+    password=r.json()['password'], 
+    host=r.json()['host']
+    )
+
+            self.cur = self.conn.cursor()
+            self.conn_status = True
+        except:
+            self.conn_status = False
+
+    def reload_app_conn(self):
+        self.connect_to_db()
+        self.show_main()
+
+    def reload_app_conn_login(self):
+        self.connect_to_db()
+        self.show_login()
 
 class Encryption(mainApp):
     def __init__(self):
